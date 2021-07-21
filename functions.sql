@@ -1,5 +1,5 @@
 --handling password and username change in user
-CREATE FUNCTION check_user() RETURNS trigger AS $check_user$
+CREATE OR REPLACE FUNCTION check_user() RETURNS trigger AS $check_user$
     BEGIN 
 
         IF (TG_OP = 'UPDATE') THEN
@@ -20,8 +20,6 @@ CREATE FUNCTION check_user() RETURNS trigger AS $check_user$
     END;
 $check_user$ LANGUAGE plpgsql;
 
-CREATE TRIGGER check_user BEFORE INSERT OR UPDATE ON movie_user
-    FOR EACH ROW EXECUTE FUNCTION check_user();
 
 
 -- handling introducer
@@ -53,8 +51,7 @@ CREATE OR REPLACE FUNCTION handle_introducer() RETURNS trigger AS $handle_introd
     END;
 $handle_introducer$ LANGUAGE plpgsql;
 
-CREATE TRIGGER handle_introducer BEFORE INSERT OR UPDATE ON movie_user
-    FOR EACH ROW EXECUTE FUNCTION handle_introducer();
+
 
 
 --INSERT INTO movie_user(username,first_name, last_name, email, phone_number, password, introducer_id)VALUES ("test10", "m","m","m@gmail.com","09193456","Mm0987654398765",45);
@@ -76,9 +73,6 @@ CREATE OR REPLACE FUNCTION handle_opinion() RETURNS trigger AS $handle_opinion$
     END;
 $handle_opinion$ LANGUAGE plpgsql;
 
-CREATE TRIGGER handle_opinion BEFORE INSERT OR UPDATE ON movie_opinion
-    FOR EACH ROW EXECUTE FUNCTION handle_opinion();
-
 
 
 CREATE OR REPLACE FUNCTION handle_watch() RETURNS trigger AS $handle_watch$
@@ -96,5 +90,30 @@ CREATE OR REPLACE FUNCTION handle_watch() RETURNS trigger AS $handle_watch$
     END;
 $handle_watch$ LANGUAGE plpgsql;
 
-CREATE TRIGGER handle_watch BEFORE INSERT ON movie_watch
-    FOR EACH ROW EXECUTE FUNCTION handle_watch();
+
+
+CREATE OR REPLACE FUNCTION handle_prouser() RETURNS trigger AS $handle_prouser$
+    
+        
+    BEGIN 
+ 
+        
+        IF (SELECT points FROM movie_user WHERE user_id = NEW.prouser_id) >=3 THEN
+            UPDATE movie_user   
+            SET    points = points - 3
+            WHERE  user_id = NEW.prouser_id;
+
+            RETURN NEW;
+        ELSEIF (SELECT wallet FROM movie_user WHERE user_id = NEW.prouser_id) >= 10000 THEN
+            UPDATE movie_user  
+            SET    wallet = wallet - 10000
+            WHERE  user_id = NEW.prouser_id; 
+            RETURN NEW;
+        ELSE
+            RAISE EXCEPTION 'it does not have enough money or points';
+
+        END IF;
+   
+    END;
+$handle_prouser$ LANGUAGE plpgsql;
+
