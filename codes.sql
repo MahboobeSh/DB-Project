@@ -1,3 +1,4 @@
+--handling password and username change in user
 CREATE FUNCTION check_user() RETURNS trigger AS $check_user$
     BEGIN 
 
@@ -21,7 +22,7 @@ CREATE TRIGGER check_user BEFORE INSERT OR UPDATE ON movie_user
     FOR EACH ROW EXECUTE FUNCTION check_user();
 
 
-
+-- handling introducer
 CREATE OR REPLACE FUNCTION handle_introducer() RETURNS trigger AS $handle_introducer$
     BEGIN 
 
@@ -52,3 +53,46 @@ $handle_introducer$ LANGUAGE plpgsql;
 
 CREATE TRIGGER handle_introducer BEFORE INSERT OR UPDATE ON movie_user
     FOR EACH ROW EXECUTE FUNCTION handle_introducer();
+
+
+--INSERT INTO movie_user(username,first_name, last_name, email, phone_number, password, introducer_id)VALUES ("test10", "m","m","m@gmail.com","09193456","Mm0987654398765",45);
+
+CREATE OR REPLACE FUNCTION handle_opinion() RETURNS trigger AS $handle_opinion$
+    BEGIN 
+
+        IF (TG_OP = 'INSERT') THEN
+        -- Check that password
+            IF (EXISTS(SELECT * FROM movie_watch WHERE user_id = NEW.user_id and movie_id = NEW.movie_id) or 
+                EXISTS(SELECT * FROM movie_SepecialMovieWatch WHERE user_id = NEW.user_id and movie_id = NEW.movie_id))  THEN
+                RETURN NEW;
+            ELSE
+                RAISE EXCEPTION 'you have to watch the film before writing an opinion'; 
+
+            END IF;            
+        END IF;
+        
+    END;
+$handle_opinion$ LANGUAGE plpgsql;
+
+CREATE TRIGGER handle_opinion BEFORE INSERT OR UPDATE ON movie_opinion
+    FOR EACH ROW EXECUTE FUNCTION handle_opinion();
+
+
+
+CREATE OR REPLACE FUNCTION handle_watch() RETURNS trigger AS $handle_watch$
+    BEGIN 
+
+        IF (EXISTS(SELECT * FROM movie_SepecialMovie WHERE special_movie_id = NEW.movie_id))THEN
+            RAISE EXCEPTION 'it has to be inserted in special watch'; 
+        ELSE
+
+            RETURN NEW;
+
+        END IF;            
+       
+        
+    END;
+$handle_watch$ LANGUAGE plpgsql;
+
+CREATE TRIGGER handle_watch BEFORE INSERT ON movie_watch
+    FOR EACH ROW EXECUTE FUNCTION handle_watch();

@@ -10,14 +10,14 @@ class User(models.Model):
     email = models.EmailField(max_length=50, unique=True)
     phone_number = models.CharField(max_length=11)
     password = models.CharField(max_length=20)
-    nationalID = models.CharField(max_length=10)
+    nationalID = models.CharField(max_length=10, null=True)
     wallet = models.IntegerField(default=0)
     points = models.IntegerField(default=0)
     introducer = models.ForeignKey('self',null=True, blank=True,on_delete=models.SET_NULL)
 
 
 class ProUser(models.Model):
-    prouser_id = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
+    prouser = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
     expr_date = models.DateField()
 
 
@@ -35,42 +35,43 @@ class Movie(models.Model):
     file = models.CharField(max_length=256)
 
 class SepecialMovie(models.Model):
-    special_movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE, primary_key=True)
+    special_movie = models.ForeignKey(Movie, on_delete=models.CASCADE, primary_key=True)
     price = models.IntegerField()
 
 
 class Watch(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     watch_time = models.DateTimeField(auto_now_add=True)
 
 
 
 class SepecialMovieWatch(models.Model):
-    movie_id = models.ForeignKey(SepecialMovie, on_delete=models.CASCADE)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(SepecialMovie, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     watch_time = models.DateTimeField(auto_now_add=True)
 
 
 class Opinion(models.Model):
     rate = models.IntegerField()
-    comment = models.CharField(max_length=256, null=True)
-    user_id = models.ForeignKey(User, on_delete=models.CASCADE)
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    comment = models.CharField(max_length=256, null=True, blank=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
 class MovieTag(models.Model):
-    movie_id = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    tag_id = models.ForeignKey(Tag, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
 
 
 class List(models.Model):
     list_id = models.AutoField(primary_key=True)
-    prouser_id = models.ForeignKey(ProUser, on_delete=models.CASCADE)
+    prouser= models.ForeignKey(ProUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=256)
     description = models.CharField(max_length=1024)
 
-class MovieList(models.Model):
-    list_id = models.AutoField(primary_key=True)
-    models.ForeignKey(Movie, on_delete=models.CASCADE)
+#class MovieList(models.Model):
+#    movie_list_id = models.AutoField(primary_key=True)
+#    list = models.ForeignKey(List, on_delete=models.CASCADE)
+#    moive = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
