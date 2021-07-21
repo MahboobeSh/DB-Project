@@ -119,15 +119,16 @@ $handle_prouser$ LANGUAGE plpgsql;
 
 
 CREATE OR REPLACE FUNCTION handle_smwatch() RETURNS trigger AS $handle_smwatch$
-    
-        
+  
+       
     BEGIN 
- 
-        
+
+
         IF (SELECT points FROM movie_user WHERE user_id = NEW.user_id) >=1 THEN
             UPDATE movie_user   
             SET    points = points - 1
             WHERE  user_id = NEW.user_id;
+
 
             RETURN NEW;
         ELSEIF (SELECT wallet FROM movie_user WHERE user_id = NEW.user_id) >= (SELECT price FROM movie_SpecialMovie WHERE special_movie_id = NEW.movie_id) THEN
