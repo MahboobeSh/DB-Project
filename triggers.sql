@@ -15,3 +15,7 @@ CREATE TRIGGER handle_watch BEFORE INSERT ON movie_watch
 
 CREATE TRIGGER handle_prouser BEFORE INSERT OR UPDATE ON movie_prouser
     FOR EACH ROW EXECUTE FUNCTION handle_prouser();
+
+
+CREATE TRIGGER handle_smwatch BEFORE INSERT OR UPDATE ON movie_SpecialMovieWatch
+    FOR EACH ROW EXECUTE FUNCTION handle_smwatch();

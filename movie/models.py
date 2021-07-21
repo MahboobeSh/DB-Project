@@ -56,7 +56,7 @@ class Watch(models.Model):
 
 class SpecialMovieWatch(models.Model):
     movie = models.ForeignKey(SpecialMovie, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(ProUser, on_delete=models.CASCADE)
     watch_time = models.DateTimeField(auto_now_add=True)
 
 
