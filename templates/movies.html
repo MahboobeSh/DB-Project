@@ -1,0 +1,21 @@
+
+
+
+<form action="{% url 'movie_search' %}" method="get">
+    <input name="name" type="text" placeholder="Search with producer name">
+    <input name="tag" type="text" placeholder="Search with related tag">
+    <input name="year" type="text" placeholder="Search with production year">
+    <button class="btn btn-primary" type="submit">Search</button>
+  </form>
+
+<h1>{{title}}</h1>
+{% if movies_list %}
+    <ul>
+    {% for movie in movies_list %}
+        <li><a href="/movie/{{ movie.movie_id }}/">{{ movie.title }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No movie are available.</p>
+{% endif %}
+

@@ -15,6 +15,9 @@ class User(models.Model):
     points = models.IntegerField(default=0)
     introducer = models.ForeignKey('self',null=True, blank=True,on_delete=models.SET_NULL)
 
+    def __str__(self):
+        return self.username
+
 
 class ProUser(models.Model):
     prouser = models.ForeignKey(User, on_delete=models.CASCADE, primary_key=True)
@@ -25,6 +28,9 @@ class Tag(models.Model):
     tag_id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=50, unique=True)
 
+    def __str__(self):
+        return self.name
+
 
 class Movie(models.Model):
     movie_id = models.AutoField(primary_key=True)
@@ -33,8 +39,10 @@ class Movie(models.Model):
     description = models.CharField(max_length=1024)
     producer = models.CharField(max_length=1024)
     file = models.CharField(max_length=256)
+    def __str__(self):
+        return self.title
 
-class SepecialMovie(models.Model):
+class SpecialMovie(models.Model):
     special_movie = models.ForeignKey(Movie, on_delete=models.CASCADE, primary_key=True)
     price = models.IntegerField()
 
@@ -46,8 +54,8 @@ class Watch(models.Model):
 
 
 
-class SepecialMovieWatch(models.Model):
-    movie = models.ForeignKey(SepecialMovie, on_delete=models.CASCADE)
+class SpecialMovieWatch(models.Model):
+    movie = models.ForeignKey(SpecialMovie, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     watch_time = models.DateTimeField(auto_now_add=True)
 

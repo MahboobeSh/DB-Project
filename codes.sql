@@ -63,7 +63,7 @@ CREATE OR REPLACE FUNCTION handle_opinion() RETURNS trigger AS $handle_opinion$
         IF (TG_OP = 'INSERT') THEN
         -- Check that password
             IF (EXISTS(SELECT * FROM movie_watch WHERE user_id = NEW.user_id and movie_id = NEW.movie_id) or 
-                EXISTS(SELECT * FROM movie_SepecialMovieWatch WHERE user_id = NEW.user_id and movie_id = NEW.movie_id))  THEN
+                EXISTS(SELECT * FROM movie_SpecialMovieWatch WHERE user_id = NEW.user_id and movie_id = NEW.movie_id))  THEN
                 RETURN NEW;
             ELSE
                 RAISE EXCEPTION 'you have to watch the film before writing an opinion'; 
@@ -82,7 +82,7 @@ CREATE TRIGGER handle_opinion BEFORE INSERT OR UPDATE ON movie_opinion
 CREATE OR REPLACE FUNCTION handle_watch() RETURNS trigger AS $handle_watch$
     BEGIN 
 
-        IF (EXISTS(SELECT * FROM movie_SepecialMovie WHERE special_movie_id = NEW.movie_id))THEN
+        IF (EXISTS(SELECT * FROM movie_SpecialMovie WHERE special_movie_id = NEW.movie_id))THEN
             RAISE EXCEPTION 'it has to be inserted in special watch'; 
         ELSE
 

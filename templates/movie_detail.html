@@ -1,0 +1,71 @@
+
+<h1>MOVIE PAGE </h1>
+<h2>{{ movie.title }}</h2>
+
+<form action="watch/" method="POST">
+    {% csrf_token %}
+    <button type="submit">watch now</button>
+</form>
+{% for s in movie.specialmovie_set.all %}
+<p>special --- price = {{s.price}}</p>
+{% endfor %}
+
+
+<p>production year: {{movie.year}}</p>
+<p>produer: {{movie.producer}}</p>
+<p>description: {{movie.description}}</p>
+
+
+<h5>related tags</h5>
+
+
+{% for tag in movie.movietag_set.all %}
+<p>{{tag.tag.name}}</p>
+
+{% endfor %}
+
+
+
+
+
+
+
+    
+<table>
+    <tr>
+    <th>Username</th>
+    <th>Rating</th>
+    <th>Comment</th>
+    </tr>
+    
+    {% for opinion in movie.opinion_set.all %}
+    <tr>
+    <td>{{ opinion.rate }}</td>
+    <td>{{ opinion.comment }}</td>
+    <td>{{ opinion.user }}</td>
+    </tr>
+    {% endfor %}
+    
+
+
+</table>
+
+
+
+<style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 80%;
+    }
+    
+    td, th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+    
+    tr:nth-child(even) {
+      background-color: #dddddd;
+    }
+</style>

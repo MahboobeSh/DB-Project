@@ -1,0 +1,13 @@
+
+<h1>register form</h1>
+
+
+
+<p>{{error}}</p>
+
+<h3>sign up form</h3>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit">register now</button>
+</form>

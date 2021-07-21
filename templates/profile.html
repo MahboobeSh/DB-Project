@@ -1,0 +1,28 @@
+<h1>User Profile</h1>
+
+
+<form action="edit/" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <p>user points = {{user.points}}</p>
+    <p>user wallet = {{user.wallet}}</p>
+    <p>user introducer={{user.introducer}}</p>
+    <button type="submit">edit profile</button>
+</form>
+
+<h3>add an introducer</h3>
+<form action="addintroducer/" method="POST">
+    {% csrf_token %}
+    <p>user introducer={{user.introducer}}</p>
+    {{form2}}
+
+    <button type="submit">add introducer</button>
+</form>
+
+<h3>increare your wallet</h3>
+<form action="/raisewallet/" method="POST">
+    {% csrf_token %}
+    <p>user wallet={{user.wallet}}</p>
+    {{form3}}
+    <button type="submit">add introducer</button>
+</form>

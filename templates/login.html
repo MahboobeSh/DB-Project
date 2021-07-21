@@ -1,0 +1,12 @@
+<h1>login form</h1>
+
+
+
+<p>{{error}}</p>
+
+<h3>sign up form</h3>
+<form action="" method="POST">
+    {% csrf_token %}
+    {{form}}
+    <button type="submit">login</button>
+</form>
