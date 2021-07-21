@@ -246,7 +246,7 @@ def addIntroducer(request,user_id):
                 return HttpResponse("you must login first")
  
 
-            introducer_username = form.cleaned_data['firstname']
+            introducer_username = form.cleaned_data['introducer_username']
             try: 
                 introducer_obj = User.objects.get(username=introducer_username)
             except:
@@ -258,17 +258,8 @@ def addIntroducer(request,user_id):
                 new_user.save()
                 return HttpResponse("your introducer is added")
             except:
-                user_obj = User.objects.get(pk=user_id)
-                temp ={'firstname':user_obj.first_name,
-                'lastname':user_obj.last_name,
-                'username':user_obj.last_name,
-                'email':user_obj.email,
-                'nationalID': user_obj.nationalID,
-                'phonenumber':user_obj.phone_number
-                }
-                form = UserForm(initial=temp)
-                return render(request, 'profile.html', {'form': form, 'error':'your introdcer canot  be added  on database'}) 
-
+                return HttpResponse("your introducer is not added")
+  
     # if a GET (or any other method) we'll create a blank form
     else:
         try: 

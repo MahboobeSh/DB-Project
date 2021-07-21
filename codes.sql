@@ -9,6 +9,8 @@ CREATE FUNCTION check_user() RETURNS trigger AS $check_user$
             END IF;
         END IF;
 
+
+
         IF (char_length(NEW.password) >= 8 and NEW.password ~ '[A-Z]' and NEW.password ~ '[a-z]' and New.password ~ '[0-9]' ) THEN
             RETURN NEW;
         ELSE

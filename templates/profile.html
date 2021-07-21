@@ -11,7 +11,7 @@
 </form>
 
 <h3>add an introducer</h3>
-<form action="addintroducer/" method="POST">
+<form action="{{user.user_id}}/addintroducer/" method="POST">
     {% csrf_token %}
     <p>user introducer={{user.introducer}}</p>
     {{form2}}
