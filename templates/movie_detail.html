@@ -1,4 +1,9 @@
 
+{%extends "header.html"%}
+
+{% block content %}
+
+
 <h1>MOVIE PAGE </h1>
 <h2>{{ movie.title }}</h2>
 
@@ -25,11 +30,6 @@
 {% endfor %}
 
 
-
-
-
-
-
     
 <table>
     <tr>
@@ -50,22 +50,11 @@
 
 </table>
 
+{% endblock %} 
 
 
-<style>
-    table {
-      font-family: arial, sans-serif;
-      border-collapse: collapse;
-      width: 80%;
-    }
-    
-    td, th {
-      border: 1px solid #dddddd;
-      text-align: left;
-      padding: 8px;
-    }
-    
-    tr:nth-child(even) {
-      background-color: #dddddd;
-    }
-</style>
+
+
+
+
+
