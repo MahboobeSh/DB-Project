@@ -42,13 +42,13 @@ def movie_search(request):
     if request.method == 'GET':
 
         name = request.GET.get("name")
-        tag = request.GET.get("tag")
-        #year = request.GET.get("year")
+        title = request.GET.get("title")
+        year = request.GET.get("year")
         
 
         if name != None : 
             movies_obj = Movie.objects.filter(Q(producer__icontains=name))
-        elif name == None:
+        elif title != None:
             name=""
             movies_obj = Movie.objects.filter(Q(producer__icontains=name))
 
