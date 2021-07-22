@@ -30,11 +30,11 @@
 </form>
 
 <h3>increare your wallet</h3>
-<form action="/raisewallet/" method="POST">
+<form action="{%url 'raiseWallet' user_id=user.user_id %}" method="POST">
     {% csrf_token %}
     <p>user wallet={{user.wallet}}</p>
     {{form3}}
-    <button type="submit">add introducer</button>
+    <button type="submit">add</button>
 </form>
 
 

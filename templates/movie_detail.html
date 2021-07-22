@@ -29,8 +29,14 @@
 
 {% endfor %}
 
+<h3>ADD a Comment:</h3>
+<form action="{% url 'comment' movie.movie_id %}" method="POST">
+  {% csrf_token %}
+  {{commentForm}}
+  <button type="submit">add</button>
+</form>
 
-    
+<h3>Related Comments: </h3>
 <table>
     <tr>
     <th>Username</th>

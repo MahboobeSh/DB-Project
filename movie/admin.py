@@ -1,6 +1,6 @@
 from movie.views import movie_list
 from django.contrib import admin
-from .models import User, ProUser, Movie, SpecialMovie, Watch, Opinion, SpecialMovieWatch, Tag, List, MovieTag
+from .models import User, ProUser, Movie, SpecialMovie,MovieList ,Watch, Opinion, SpecialMovieWatch, Tag, List, MovieTag
 # Register your models here.
 
 admin.site.register(User)
@@ -13,3 +13,4 @@ admin.site.register(SpecialMovieWatch)
 admin.site.register(Tag)
 admin.site.register(List)
 admin.site.register(MovieTag)
+admin.site.register(MovieList)

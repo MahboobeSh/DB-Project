@@ -146,9 +146,9 @@
     <div class="navbar">
         <a href="{%url 'movie_list' %}" class="active">Home</a>
         
-
-        {%if request.Session.user_id%}
-        <a href="{% url 'profile' user_id=request.Session.user_id %}" class="right">Profile</a>
+        
+        {% if request.session.user_id %}
+        <a href="{% url 'profile' user_id=request.session.user_id %}" class="right">Profile</a>
         <a href="{% url 'logout' %}" class="right">Logout</a>
         {% else %}
         <a href="{%  url 'register' %}" class="right">Register</a>
@@ -156,6 +156,7 @@
         {% endif %}
         
     </div>
+    <p>{{msg}}</p>
 
     {% block content %}
 

@@ -24,7 +24,19 @@ class IntroducerForm(forms.Form):
 
 
 class WalletForm(forms.Form):
-    amount = forms.CharField(label='amount', max_length=30)
+    amount = forms.IntegerField(label='amount', min_value=0)
+
+
+class CommentForm(forms.Form):
+    rate = forms.IntegerField(label='rate',min_value=1,max_value=5)
+    comment = forms.CharField(label='comment', widget=forms.Textarea, required=False)
 
 
 
+class CreateListForm(forms.Form):
+    name = forms.CharField(label='list name')
+    description = forms.CharField(label='description', widget=forms.Textarea)
+
+
+class AddToListForm(forms.Form):
+    movie = forms.CharField(label='movie name')
