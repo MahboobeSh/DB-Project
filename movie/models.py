@@ -82,12 +82,7 @@ class List(models.Model):
 class MovieList(models.Model):
     movie_list_id = models.AutoField(primary_key=True)
     list = models.ForeignKey(List, on_delete=models.CASCADE)
-    moive = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
-    class Meta:
-        constraints = [
-            models.UniqueConstraint(fields=['list_id', 'movie_id'], name='test')
-        ]
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
 
 
 

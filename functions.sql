@@ -78,7 +78,7 @@ $handle_opinion$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION handle_watch() RETURNS trigger AS $handle_watch$
     BEGIN 
 
-        IF (EXISTS(SELECT * FROM movie_SpecialMovie WHERE special_movie_id = NEW.movie_id))THEN
+        IF (EXISTS(SELECT * FROM movie_specialmovie  WHERE special_movie_id = NEW.movie_id))THEN
             RAISE EXCEPTION 'it has to be inserted in special watch'; 
         ELSE
 

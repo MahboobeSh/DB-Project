@@ -10,34 +10,90 @@
 
 <h1>User Profile</h1>
 
+<h3>Related Lists:</h3>
 
-<form action="edit/" method="POST">
-    {% csrf_token %}
-    {{form}}
-    <p>user points = {{user.points}}</p>
-    <p>user wallet = {{user.wallet}}</p>
-    <p>user introducer={{user.introducer}}</p>
-    <button type="submit">edit profile</button>
-</form>
+<div>
+<ul>
+    {% for list in user.prouser_set.first.list_set.all %}
 
-<h3>add an introducer</h3>
-<form action="{{user.user_id}}/addintroducer/" method="POST">
-    {% csrf_token %}
-    <p>user introducer={{user.introducer}}</p>
-    {{form2}}
 
-    <button type="submit">add introducer</button>
-</form>
+                <li><a href="{% url 'list_detail' list_id=list.list_id %}">{{ list.name}}</a></li>
 
-<h3>increare your wallet</h3>
-<form action="{%url 'raiseWallet' user_id=user.user_id %}" method="POST">
-    {% csrf_token %}
-    <p>user wallet={{user.wallet}}</p>
-    {{form3}}
-    <button type="submit">add</button>
-</form>
+            
+
+    {% endfor %}
+</ul>
+</div>
+
+<h3>User Info:</h3>
+{% if request.session.user_id %}
+    {% if request.session.user_id == user.user_id %}
+
+
+    <form action="edit/" method="POST">
+        {% csrf_token %}
+        {{form}}
+        <p>user points = {{user.points}}</p>
+        <p>user wallet = {{user.wallet}}</p>
+        <p>user introducer={{user.introducer}}</p>
+        <button type="submit">edit profile</button>
+    </form>
+
+    <h3>add an introducer</h3>
+    <form action="{{user.user_id}}/addintroducer/" method="POST">
+        {% csrf_token %}
+        <p>user introducer={{user.introducer}}</p>
+        {{form2}}
+
+        <button type="submit">add introducer</button>
+    </form>
+
+    <h3>increare your wallet</h3>
+    <form action="{%url 'raiseWallet' user_id=user.user_id %}" method="POST">
+        {% csrf_token %}
+        <p>user wallet={{user.wallet}}</p>
+        {{form3}}
+        <button type="submit">add</button>
+    </form>
+
+
+
+    <h3>become a pro  or extend your time </h3>
+    <form action="{%url 'addpro' %}" method="POST">
+        {% csrf_token %}
+        <p>your wallet: {{user.wallet}}</p>
+        <p>your points: {{user.points}}</p>
+        
+        {{form5}}
+        <button type="submit">buy</button>
+    </form>
+
+    <h3>create a list </h3>
+    <form action="{%url 'createlist' user_id=user.user_id %}" method="POST">
+        {% csrf_token %}
+        
+        {{form4}}
+        <button type="submit">create</button>
+    </form>
+
+
+
+
+    {% else %}
+        <div>
+            <p>username : {{user.username}}</p>
+            <p>points: {{user.points}}</p>
+        </div>
+
+    {% endif %}
+{% else %}
+    <div>
+        <p>username : {{user.username}}</p>
+        <p>points: {{user.points}}</p>
+    </div>
+{% endif %}
+
+
 
 
 {% endblock %} 
-
-

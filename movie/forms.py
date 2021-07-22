@@ -3,6 +3,9 @@ from django import forms
 class WatchForm(forms.Form):
     pass
 
+class ProForm(forms.Form):
+    pass
+
 class UserForm(forms.Form):
     username = forms.CharField(label='username', max_length=30)
     firstname = forms.CharField(label='firstname',max_length=30)
@@ -39,4 +42,4 @@ class CreateListForm(forms.Form):
 
 
 class AddToListForm(forms.Form):
-    movie = forms.CharField(label='movie name')
+    name = forms.CharField(label='name',max_length=30)

@@ -4,14 +4,15 @@ from django.db.models.query_utils import Q
 from django.http.response import HttpResponseBase
 from django.shortcuts import render, get_object_or_404,redirect
 from django.http import Http404
+from datetime import timedelta, date
 
 # Create your views here.
 from django.http import HttpResponse
-from .models import User,Movie,MovieTag,ProUser,SpecialMovie,Watch,SpecialMovieWatch,List,Opinion
-from .forms import CommentForm, WatchForm, UserForm, LogInForm, IntroducerForm, WalletForm
+from .models import MovieList, User,Movie,MovieTag,ProUser,SpecialMovie,Watch,SpecialMovieWatch,List,Opinion
+from .forms import  ProForm,CreateListForm,AddToListForm,CommentForm, WatchForm, UserForm, LogInForm, IntroducerForm, WalletForm
 
 def home(request):
-    return render(request, "home.html")
+    return redirect('movie_list')
 
 
 def movie_detail(request, movie_id):
@@ -80,12 +81,13 @@ def watch_movie(request, movie_id):
         obj.movie_id = movie_id
         try:
             obj.save()
-            return HttpResponse("you watched this movie")
+            return HttpResponse("you watched this movie normal")
         except:
             try:
                 obj = SpecialMovieWatch()
                 obj.user_id = user_id
                 obj.movie_id = movie_id
+                obj.save()
                 return HttpResponse("you watched this movie")
             except:
                 return HttpResponse("you can not watch this movie")
@@ -206,7 +208,7 @@ def profile(request, user_id):
                 user_obj = User.objects.get(pk=user_id)
                 temp ={'firstname':user_obj.first_name,
                 'lastname':user_obj.last_name,
-                'username':user_obj.last_name,
+                'username':user_obj.username,
                 'email':user_obj.email,
                 'nationalID': user_obj.nationalID,
                 'phonenumber':user_obj.phone_number
@@ -223,7 +225,7 @@ def profile(request, user_id):
             raise Http404("user does not exist")
         temp ={'firstname':user_obj.first_name,
                 'lastname':user_obj.last_name,
-                'username':user_obj.last_name,
+                'username':user_obj.username,
                 'email':user_obj.email,
                 'nationalID': user_obj.nationalID,
                 'phonenumber':user_obj.phone_number
@@ -231,9 +233,10 @@ def profile(request, user_id):
         form = UserForm(initial=temp)
         form2 = IntroducerForm()
         form3 = WalletForm()
+        form4 = CreateListForm
 
 
-    return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3}) 
+    return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3, 'form4':form4}) 
 
 
 
@@ -279,7 +282,7 @@ def addIntroducer(request,user_id):
             raise Http404("user does not exist")
         temp ={'firstname':user_obj.first_name,
                 'lastname':user_obj.last_name,
-                'username':user_obj.last_name,
+                'username':user_obj.username,
                 'email':user_obj.email,
                 'nationalID': user_obj.nationalID,
                 'phonenumber':user_obj.phone_number
@@ -287,9 +290,11 @@ def addIntroducer(request,user_id):
         form = UserForm(initial=temp)
         form2 = IntroducerForm()
         form3 = WalletForm()
+        form4 = CreateListForm()
+        form5 = ProForm()
 
 
-    return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3}) 
+    return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3, 'form4': form4, 'form5':form5}) 
 
 
 
@@ -326,7 +331,7 @@ def raiseWallet(request, user_id):
 
                 temp ={'firstname':user_obj.first_name,
                         'lastname':user_obj.last_name,
-                        'username':user_obj.last_name,
+                        'username':user_obj.username,
                         'email':user_obj.email,
                         'nationalID': user_obj.nationalID,
                         'phonenumber':user_obj.phone_number
@@ -334,7 +339,9 @@ def raiseWallet(request, user_id):
                 form = UserForm(initial=temp)
                 form2 = IntroducerForm()
                 form3 = WalletForm()
-                return render(request, 'profile.html', {'form': form, 'user':new_user, 'form2': form2, 'form3':form3, 'msg':"your wallet increased"})
+                form4 = CreateListForm()
+                form5 = ProForm()
+                return render(request, 'profile.html', {'form': form, 'user':new_user, 'form2': form2, 'form3':form3,'form4': form4, 'form5':form5, 'msg':"your wallet increased"})
                 
             except:
                 return HttpResponse("you waallet could not increase")
@@ -350,7 +357,7 @@ def raiseWallet(request, user_id):
 
         temp ={'firstname':user_obj.first_name,
                 'lastname':user_obj.last_name,
-                'username':user_obj.last_name,
+                'username':user_obj.username,
                 'email':user_obj.email,
                 'nationalID': user_obj.nationalID,
                 'phonenumber':user_obj.phone_number
@@ -358,8 +365,10 @@ def raiseWallet(request, user_id):
         form = UserForm(initial=temp)
         form2 = IntroducerForm()
         form3 = WalletForm()
+        form4 = CreateListForm()
+        form5 = ProForm()
 
-        return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3})
+        return render(request, 'profile.html', {'form': form, 'user':user_obj, 'form2': form2, 'form3':form3,'form4': form4, 'form5':form5})
 
 
 
@@ -391,14 +400,119 @@ def addComment(request, movie_id):
 
 
 
-def createList(request):
-    pass
 
 
-def list_detail(request, list_id):
-    pass
+
+
+
 
 
 def addToList(request,list_id):
-    pass
+    if request.method == "POST":
+        try:
+            user_id =request.session['user_id']
+        except:
+            return HttpResponse("you must login first")
+        
+        
+        form = AddToListForm(request.POST)
+        
+        if form.is_valid():
+            movie_name = form.cleaned_data['name']
+            print("\n \n \n test \n \n \n")
+            try:
+                movie_obj = Movie.objects.get(title=movie_name) 
+            except:
+                return HttpResponse("there is no mive ith this title in database")
 
+            obj = MovieList()
+            obj.list_id = list_id
+            obj.movie_id = movie_obj.movie_id
+
+            
+            try:
+                obj.save()
+                return HttpResponse("your movie added to the list")
+            except:
+                    return HttpResponse("you can not add movie to list")
+        else:
+            return HttpResponse("the form is not valid")
+
+    else:
+        return HttpResponse("your request is not allowed")
+    
+
+def createList(request, user_id):
+    if request.method == "POST":
+        try:
+            session_user_id =request.session['user_id']
+        except:
+            return HttpResponse("you must login first")
+        
+        if session_user_id != user_id:
+            return HttpResponse("you cannot add a list for another user")
+        
+        form = CreateListForm(request.POST)
+        if form.is_valid():
+            obj = List()
+            obj.prouser_id = user_id
+            obj.name = form.cleaned_data['name']
+
+            obj.description= form.cleaned_data['description']
+            try:
+                obj.save()
+                return HttpResponse("your list is created")
+            except:
+
+                    return HttpResponse("you can not add comment add list")
+        else:
+            return HttpResponse("the form is not valid")
+
+    else:
+        return HttpResponse("your request is not allowed")
+
+
+def list_detail(request, list_id):
+    if request.method == "GET":
+
+        list_obj = get_object_or_404(List, list_id=list_id)
+        var = {
+            'list':list_obj,
+            'form':AddToListForm(),
+            
+        }
+        return render(request, "list_detail.html", var)
+
+
+
+def add_pro(request):
+    if request.method == "POST":
+
+        try:
+            user_id =request.session['user_id']
+        except:
+            return HttpResponse("you must login first")
+        
+        form = ProForm(request.POST)
+
+        try: 
+            obj = ProUser.objects.get(pk=user_id)
+            if obj.expr_date <= date.today():
+                obj.expr_date = date.today() + timedelta(days=30)
+            else:
+                obj.expr_date = obj.expr_date + timedelta(days=30)
+                
+
+        except:
+            obj = ProUser()
+            obj.user_id = user_id
+            obj.expr_date =  date.today() + timedelta(days=30)
+        try:
+            obj.save()
+            return HttpResponse("you became a pro user or extend your time")
+        except:
+       
+            return HttpResponse("you can not become pro or extend your time")
+
+    else:
+        return HttpResponse("your request is not allowed")
