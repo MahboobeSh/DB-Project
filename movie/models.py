@@ -75,11 +75,14 @@ class MovieTag(models.Model):
 class List(models.Model):
     list_id = models.AutoField(primary_key=True)
     prouser= models.ForeignKey(ProUser, on_delete=models.CASCADE)
-    name = models.CharField(max_length=256)
+    name = models.CharField(max_length=256, unique=True)
     description = models.CharField(max_length=1024)
 
-#class MovieList(models.Model):
-#    movie_list_id = models.AutoField(primary_key=True)
-#    list = models.ForeignKey(List, on_delete=models.CASCADE)
-#    moive = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+class MovieList(models.Model):
+    movie_list_id = models.AutoField(primary_key=True)
+    list = models.ForeignKey(List, on_delete=models.CASCADE)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+
 

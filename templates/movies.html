@@ -1,4 +1,7 @@
 
+{%extends "header.html"%}
+
+{% block content %}
 
 
 <form action="{% url 'movie_search' %}" method="get">
@@ -18,4 +21,10 @@
 {% else %}
     <p>No movie are available.</p>
 {% endif %}
+
+
+
+
+{% endblock %} 
+
 

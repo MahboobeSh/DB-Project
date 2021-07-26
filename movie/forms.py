@@ -3,6 +3,9 @@ from django import forms
 class WatchForm(forms.Form):
     pass
 
+class ProForm(forms.Form):
+    pass
+
 class UserForm(forms.Form):
     username = forms.CharField(label='username', max_length=30)
     firstname = forms.CharField(label='firstname',max_length=30)
@@ -24,7 +27,19 @@ class IntroducerForm(forms.Form):
 
 
 class WalletForm(forms.Form):
-    amount = forms.CharField(label='amount', max_length=30)
+    amount = forms.IntegerField(label='amount', min_value=0)
+
+
+class CommentForm(forms.Form):
+    rate = forms.IntegerField(label='rate',min_value=1,max_value=5)
+    comment = forms.CharField(label='comment', widget=forms.Textarea, required=False)
 
 
 
+class CreateListForm(forms.Form):
+    name = forms.CharField(label='list name')
+    description = forms.CharField(label='description', widget=forms.Textarea)
+
+
+class AddToListForm(forms.Form):
+    name = forms.CharField(label='name',max_length=30)
